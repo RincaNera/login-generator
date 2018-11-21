@@ -12,6 +12,7 @@ public class LoginGenerator {
 
     /**
      * Construit un login generator
+     *
      * @param loginService le service de login
      */
     public LoginGenerator(LoginService loginService) {
@@ -24,18 +25,22 @@ public class LoginGenerator {
      * par rapport a la liste des logins existants. En cas de doublon, on incremente le doublon d'un indice. Ci dessous des
      * exemples :
      * <ul>
-     *     <li>Paul Dupond -> PDUP </li>
-     *     <li>Pierre Dupard -> PDUP1</li>
-     *     <li>Jacques Durand -> JDUR</li>
-     *     <li>Lionel R&eacute;gal -> LREG</li>
+     * <li>Paul Dupond -> PDUP </li>
+     * <li>Pierre Dupard -> PDUP1</li>
+     * <li>Jacques Durand -> JDUR</li>
+     * <li>Lionel R&eacute;gal -> LREG</li>
      * </ul>
-     * @param nom le nom
+     *
+     * @param nom    le nom
      * @param prenom le prenom
      * @return le login genere
      */
     public String generateLoginForNomAndPrenom(String nom, String prenom) {
         String p = deAccent(prenom.substring(0, 1).toUpperCase());
-        String n = deAccent(nom.substring(0, 3).toUpperCase());
+        StringBuilder nB = new StringBuilder();
+        for (int i = 0; i < nom.length(); i++)
+            nB.append(deAccent(nom.substring(i, i+1).toUpperCase()));
+        String n = nB.toString();
         String login = p + n;
         if (loginService.loginExists(login)) {
             int i = 1;
@@ -59,10 +64,5 @@ public class LoginGenerator {
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(nfdNormalizedString).replaceAll("");
     }
-
-
-
-
-
 
 }
